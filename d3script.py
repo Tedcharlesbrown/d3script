@@ -1,3 +1,6 @@
+# sys.path.append('./');import d3script
+# d3script.refresh_scripts()
+
 import importlib
 from d3 import *
 from gui.columnlistview import ColumnListView, ColumnListViewItem, ColumnListViewColumn
@@ -32,6 +35,14 @@ def load_scripts():
 
 	# Create and show the script menu
 	d3gui.root.add(ScriptMenu())
+ 
+def refresh_scripts():
+	"""Unload and reload the script."""
+	if 'd3script' in sys.modules:
+		del sys.modules['d3script']
+	sys.path.append('./')
+	import d3script
+	print("Scripts refreshed.")
 
 # Basic script menu class
 class ScriptMenu(Widget):
@@ -45,9 +56,7 @@ class ScriptMenu(Widget):
 		self.add(self.titleButton)
 
 		# Add a "Hello World" button
-		helloButton = Button("Hello World", self.say_hello)
-		helloButton.border = Vec2(0, 12)
-		self.add(helloButton)
+		self.add_button("Hello World", self.say_hello)
 
 		self.arrangeVertical()
 		d3gui.root.add(self)
@@ -55,6 +64,12 @@ class ScriptMenu(Widget):
 
 	def say_hello(self):
 		print("Hello, World!")
+
+	def add_button(self, text, function):
+		button = Button(text, function)
+		button.border = Vec2(0, 12)
+		self.add(button)
+		self.arrangeVertical()
 
 # Initialize the script
 load_scripts()
